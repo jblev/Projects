@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+
+<style media="screen">
+body{
+  background-color: rgb(147, 157, 173);
+  <!-- background-size: contain;
+  background-position: center; -->
+}
+div{
+  border: solid 1px red;
+}
+#backbutton{
+  display: none;
+}
+#Alerts{
+  display: none;
+}
+#ParkPage{
+  display: none;
+  padding-bottom: 30px;
+}
+#Camping{
+  display: none;
+}
+
+.CampSite{
+  display: none;
+}
+.jumbotron{
+  background-color: rgb(135, 171, 229);
+  box-shadow:  5px 5px 8px grey;
+  background-size: width 100%;
+}
+.Information{
+  color: green;
+
+}
+.Danger{
+  color:red;
+}
+.Caution{
+  color:yellow;
+}
+.Park.Closure{
+  color: black;
+}
+.loadingBackground{
+  position: fixed;
+  padding-top: 200px;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+.spinner-border{
+  z-index: 2;
+  height: 4;
+  width: 4;
+}
+</style>
+<title>Dashboard</title>
+</head>
+<body id="body">
+  <div id="loading"class="loadingBackground text-center">
+    <div class="spinner-border"></div>
+  </div>
+
+  <div class="jumbotron" id="jumboTron">
+    <h1 class="display-4" id="jumboHeader">Adventure<br>Atlas</h1>
+    <p class="lead"id="lead"></p>
+    <hr class="my-4">
+    <div class="parkInfoWrapper row">
+    <div class="col">Cost: <span id="parkCost"></span></div>
+    <div class="col">Hours: <span id="parkHours"></span></div>
+    <div class="col">Entrances: <span id="parkEntrance"></span></div>
+    </div>
+    <button class="btn btn-secondary" name="button" id="backbutton">Go Back</button>
+  </div>
+
+  <div class="container-fluid" id="LandingPage">
+
+    <div class="row justify-content-center"id="ButtonWrapper"></div>
+
+  </div>
+
+  <div class="container-fluid" id="ParkPage">
+
+    <div class="row">
+
+      <div class="col" id="AlertWrapper">
+        <span>Alerts<span class="badge badge-primary" id="alertnum"></span></span>
+        <div class="Content" id="Alerts">
+
+        </div>
+      </div>
+      <div class="col">
+        <div id="WeatherWrapper">
+          Weather
+        </div>
+        <div id="CampingWrapper">
+          <span>Campsites:<span class="badge badge-secondary" id="campnum"></span></span>
+            <div class="Content" id="Camping"></div>
+      </div>
+      </div>
+
+
+
+
+    <div class="row">
+      <div class="col" id="Description"></div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $('.parkInfoWrapper').hide()
+});
+
+var BckBtn = document.getElementById('backbutton');
+var LndPg = document.getElementById('LandingPage');
+var PrkPg = document.getElementById('ParkPage');
+var jumbo = document.getElementById('jumboTron');
+var jumboHd = document.getElementById('jumboHeader')
+var alertOpener = document.getElementById('AlertWrapper');
+var campingOpener = document.getElementById('CampingWrapper');
+var campingsites = document.getElementById('Camping'); //placeholder
+var parkDescription = document.getElementById('Description');
+var alerts = document.getElementById('Alerts');
+var headline = document.getElementById('lead');
+var bdy = document.getElementById('body');
+
+//var BckBtn = document.getElementById('backbutton');
+//var PrkPg = document.getElementById('ParkPage');
+//var jumbo = document.getElementById('jumboTron');
+//var jumboHd = document.getElementById('jumboHeader')
+//var alertOpener = document.getElementById('AlertWrapper');
+//var campingOpener = document.getElementById('CampingWrapper');
+//var campingsites = document.getElementById('Camping'); //placeholder
+//var parkDescription = document.getElementById('Description');
+//var alerts = document.getElementById('Alerts');
+//var headline = document.getElementById('lead');
+//var bdy = document.getElementById('body');
+
+alertOpener.onclick = function(){
+  document.getElementById('Alerts').style.display = "block";
+}
+
+BckBtn.onclick = function(){
+  BckBtn.style.display ="none";
+  LndPg.style.display = "block";
+  PrkPg.style.display = "none";
+  jumboHd.innerText = "Adventure \n Atlas";
+  alerts.style.display = "none";
+  headline.innerHTML= "";
+  //bdy.style.backgroundImage = "";
+  jumbo.style.backgroundColor = "rgb(135, 171, 229)";
+  jumbo.style.backgroundImage = "";
+  campingsites.style.display = "none";
+  $('.parkInfoWrapper').hide();
+}
+
+function parkSelect(park_name){
+  BckBtn.style.display = "block";
+  LndPg.style.display = "none";
+  PrkPg.style.display = "block";
+  jumboHd.innerText = park_name;
+  jumbo.style.backgroundColor = "transparent";
+  $('.parkInfoWrapper').show();
+}
+
+function showcampsite(){
+$('.CampSite').show();
+}
+
+campingOpener.onclick = function(){
+  document.getElementById('Camping').style.display = "block";
+}
+
+function populateAlerts(park_code) {
+  var alertsparkID = ''
+      alertsparkID += 'https://developer.nps.gov/api/v1/alerts?parkCode=' + park_code + '&API_KEY=hlCq5iNYEJjSNSqshOxBeCpwfMvMsNst3hmMvFUB';
+
+  var xhr = new XMLHttpRequest();
+      xhr.open('GET', alertsparkID ,true);
+      xhr.send(null);
+      xhr.onload = function(){
+        if(xhr.status === 200){
+          responseObjectalerts = JSON.parse(xhr.responseText);
+          var PrkAlerts =''
+          var AlertCount = responseObjectalerts.data.length;
+            for (var i = 0; i < responseObjectalerts.data.length; i++) {
+              PrkAlerts += '<div id= "' + responseObjectalerts.data[i].id + '">';
+              PrkAlerts += '<strong class= "alerts ' + responseObjectalerts.data[i].category + '">' + responseObjectalerts.data[i].category + '</strong>'  + ' : ' + responseObjectalerts.data[i].title + '<br> <p>' + responseObjectalerts.data[i].description +'</p></div>';
+            }
+        document.getElementById('Alerts').innerHTML = PrkAlerts;
+          if (AlertCount >= 1) {
+          document.getElementById('alertnum').innerText = AlertCount;
+            }
+        }
+      }
+}
+function populateDescription(park_code) {
+  var descrParkID = ''
+      descrParkID += 'https://developer.nps.gov/api/v1/parks?parkCode=' + park_code + '&fields=images,operatinghours,entrancefees&API_KEY=hlCq5iNYEJjSNSqshOxBeCpwfMvMsNst3hmMvFUB';
+
+  var xhr = new XMLHttpRequest();
+      xhr.open('GET', descrParkID ,true);
+      xhr.send(null);
+      xhr.onload = function(){
+
+              if(xhr.status === 200){
+                responseObjectparks = JSON.parse(xhr.responseText);
+                var PrkDescrip =''
+                var PrkWeather =''
+                var PrkImage =''
+                var PrkInfoHours = ''
+                var PrkInfoCost = ''
+                var PrkInfoEntrance = ''
+                  for (var i = 0; i < responseObjectparks.data[0].entranceFees.length; i++) {
+                    PrkInfoCost += responseObjectparks.data[0].entranceFees[i].title + ' : $ ' + parseInt(responseObjectparks.data[0].entranceFees[i].cost, 10) + '<br>';
+                  }
+                   for (var i = 0; i <responseObjectparks.data[0].operatingHours.length; i++) {
+                     PrkInfoHours += responseObjectparks.data[0].operatingHours[i].name + '<br>';
+                     PrkInfoHours += 'Standard Hours: ' + responseObjectparks.data[0].operatingHours[i].standardhours; + '<br>';
+                     PrkInfoHours += 'Exceptions: ' + responseObjectparks.data[0].operatingHours[i].exceptions;
+                   }
+
+                  PrkDescrip += '<div>' + responseObjectparks.data[0].description + '</div>';
+                  PrkWeather += '<div>' + responseObjectparks.data[0].weatherInfo + '</div>';
+                  PrkImage += 'url(' + responseObjectparks.data[0].images[0].url + ')' ;
+
+                document.getElementById('lead').innerHTML = PrkDescrip;
+                document.getElementById('WeatherWrapper').innerHTML = PrkWeather;
+                document.getElementById('jumboTron').style.backgroundImage = PrkImage;
+                $('#parkCost').html(PrkInfoCost);
+                $('#parkHours').html(PrkInfoHours);
+              }
+            }
+          }
+function populateCamping(park_code) {
+  var campParkID = ''
+      campParkID += 'https://developer.nps.gov/api/v1/campgrounds?parkCode=' + park_code + '&API_KEY=hlCq5iNYEJjSNSqshOxBeCpwfMvMsNst3hmMvFUB';
+
+  var xhr = new XMLHttpRequest();
+      xhr.open('GET', campParkID ,true);
+      xhr.send(null);
+      xhr.onload = function(){
+
+              if(xhr.status === 200){
+                responseObjectcamps = JSON.parse(xhr.responseText);
+                var Campsite =''
+                var CampCount = responseObjectcamps.data.length
+                for (var i = 0; i < responseObjectcamps.data.length; i++) {
+                  Campsite += '<div onclick= "showcampsite()">' + responseObjectcamps.data[i].name + '<br>' + responseObjectcamps.data[i].fees + '<div class="CampSite">'
+                  Campsite +=  responseObjectcamps.data[i].description + '<br><p>';
+                  Campsite +=  "other: " + responseObjectcamps.data[i].campsites.other + '<br>' + "group: " + responseObjectcamps.data[i].campsites.group + '<br>';
+                  Campsite +=  "horse: " + responseObjectcamps.data[i].campsites.horse + '<br>' + "totalsites: " + responseObjectcamps.data[i].campsites.totalsites + '<br>' ;
+                  Campsite +=  "tent: " + responseObjectcamps.data[i].campsites.tentonly + '<br>' + "electricalHookups: " + responseObjectcamps.data[i].campsites.electricalhookups + '<br>' ;
+                  Campsite +=  "RV: " + responseObjectcamps.data[i].campsites.rvonly + '<br>' + "Walk/Boat To: " + responseObjectcamps.data[i].campsites.walkboatto  +'</p></div></div>';
+                }
+                }
+                document.getElementById('Camping').innerHTML = Campsite;
+                document.getElementById('campnum').innerText = CampCount;
+              }
+            }
+
+
+
+var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://developer.nps.gov/api/v1/parks?parkCode=acad,arch,badl,bibe,bisc,blca,brca,cany,care,cave,chis,cong,crla,cuva,deva,dena,drto,ever,gaar,jeff,glac,glba,grca,grte,grba,grsa,grsm,gumo,hale,havo,hosp,indu,isro,jotr,katm,kefj,kova,lacl,lavo,maca,meve,mora,noca,olym,pefo,pinn,romo,sagu,seki,shen,thro,viis,voya,wica,wrst,yell,yose,zion&limit=58&API_KEY=hlCq5iNYEJjSNSqshOxBeCpwfMvMsNst3hmMvFUB', true);                 // Create XMLHttpRequest object
+    xhr.send(null);
+    xhr.onload = function(){
+
+      if(xhr.status === 200){
+        responseObject = JSON.parse(xhr.responseText);
+        var PrkBtns =''
+
+        for (var i = 0; i < responseObject.data.length; i++) {
+          PrkBtns += '<span onclick= "parkSelect(this.innerText); populateDescription(this.id); populateAlerts(this.id); populateCamping(this.id); " class= "btn btn-primary" id= "' + responseObject.data[i].parkCode + '">';
+           PrkBtns += responseObject.data[i].name  + '</span>';
+        }
+        document.getElementById('ButtonWrapper').innerHTML = PrkBtns;  //matches the parkcode of the alert with the parkcode of the div the alert should go into
+        document.getElementById('loading').style.display = "none";
+    }
+  }
+
+</script>
+</body>
+</html>
